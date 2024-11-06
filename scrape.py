@@ -1,25 +1,23 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-import time
+from webdriver_manager.chrome import ChromeDriverManager
 
-# Set up Chrome options
-chrome_options = Options()
-chrome_options.add_argument('--headless')  # Run headless (no UI)
-chrome_options.add_argument('--disable-gpu')  # Disable GPU hardware acceleration
+# Set options for headless browsing
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')  # run in headless mode
+options.add_argument('--no-sandbox')  # to avoid issues with Docker
+options.add_argument('--disable-dev-shm-usage')  # to avoid shared memory issues
 
-# Initialize the WebDriver
-driver = webdriver.Chrome(options=chrome_options)
+# Setup WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# Open a website
-driver.get("https://www.example.com")
+# Go to the webpage
+driver.get('http://example.com')
 
-# Wait for the page to load
-time.sleep(2)
+# Example: Extract title
+title = driver.title
+print(f"Page Title: {title}")
 
-# Scrape an element (example)
-element = driver.find_element(By.XPATH, "//h1")
-print(f"Scraped text: {element.text}")
-
-# Close the browser
+# Close the driver
 driver.quit()
