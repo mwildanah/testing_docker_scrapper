@@ -1,33 +1,28 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
-# Configure Chrome options for headless mode
-options = Options()
-options.add_argument("--headless")  # Ensure headless mode
-options.add_argument("--disable-gpu")  # Disable GPU acceleration
-options.add_argument("--no-sandbox")  # Bypass sandbox restrictions (needed for Docker)
-options.add_argument("--remote-debugging-port=9222")  # Allow debugging
+# Set up Chrome options for headless mode
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Run in headless mode
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Initialize the Chrome driver with ChromeDriverManager
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# Initialize the driver in headless mode
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Example operation (navigate to a page)
-driver.get("https://www.example.com")
+# Open the webpage
+driver.get("https://example.com")
 
-# Set timeout for waiting elements
-wait = WebDriverWait(driver, 60)  # Increase wait time to 30 seconds
+# Wait for an element to be visible
+wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
+element = wait.until(EC.visibility_of_element_located((By.ID, "some_element_id")))
 
-# Example: Wait until an element is present
-element = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='example-class']")))
+print("Element is visible and ready for interaction")
 
-wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-
-print(driver.title)
-
-# Close the browser after the task
+# Close the driver
 driver.quit()
