@@ -1,19 +1,43 @@
-FROM selenium/standalone-chrome:latest
+# Use the official Python image
+FROM python:3.8-slim
 
-USER root
-
-# Install any necessary dependencies or libraries
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip
+    curl \
+    unzip \
+    ca-certificates \
+    libnss3 \
+    libgdk-pixbuf2.0-0 \
+    libxss1 \
+    libgconf-2-4 \
+    libappindicator3-1 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libx11-xcb1 \
+    libxtst6 \
+    libxrandr2 \
+    xdg-utils \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Selenium for Python
-RUN pip3 install selenium
+# Install Chrome and ChromeDriver
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN dpkg -i google-chrome-stable_current_amd64.deb
+RUN apt-get install -f
 
-# Set the working directory inside the container
-WORKDIR /usr/src/app
+# Install Python dependencies
+RUN pip install selenium
 
-# Copy your scraping script into the container
-COPY scrape.py .
+# Set display for headless operation
+ENV DISPLAY=:99
 
-CMD ["python3", "scrape.py"]
+# Copy the scraping script
+COPY scrape.py /app/scrape.py
+
+# Set the working directory
+WORKDIR /app
+
+# Run the scraping script
+CMD ["python", "scrape.py"]
