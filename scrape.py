@@ -1,23 +1,30 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Set options for headless browsing
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # run in headless mode
-options.add_argument('--no-sandbox')  # to avoid issues with Docker
-options.add_argument('--disable-dev-shm-usage')  # to avoid shared memory issues
+# Configure Chrome options for headless mode
+options = Options()
+options.add_argument("--headless")  # Ensure headless mode
+options.add_argument("--disable-gpu")  # Disable GPU acceleration
+options.add_argument("--no-sandbox")  # Bypass sandbox restrictions (needed for Docker)
+options.add_argument("--remote-debugging-port=9222")  # Allow debugging
 
-# Setup WebDriver
+# Initialize the Chrome driver with ChromeDriverManager
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# Go to the webpage
-driver.get('http://example.com')
+# Set timeout for waiting elements
+wait = WebDriverWait(driver, 30)  # Increase wait time to 30 seconds
 
-# Example: Extract title
-title = driver.title
-print(f"Page Title: {title}")
+# Example: Wait until an element is present
+element = wait.until(EC.presence_of_element_located((By.ID, "some_element_id")))
 
-# Close the driver
+# Example operation (navigate to a page)
+driver.get("https://www.example.com")
+print(driver.title)
+
+# Close the browser after the task
 driver.quit()
