@@ -16,14 +16,17 @@ options.add_argument("--remote-debugging-port=9222")  # Allow debugging
 # Initialize the Chrome driver with ChromeDriverManager
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# Set timeout for waiting elements
-wait = WebDriverWait(driver, 30)  # Increase wait time to 30 seconds
-
-# Example: Wait until an element is present
-element = wait.until(EC.presence_of_element_located((By.ID, "some_element_id")))
-
 # Example operation (navigate to a page)
 driver.get("https://www.example.com")
+
+# Set timeout for waiting elements
+wait = WebDriverWait(driver, 60)  # Increase wait time to 30 seconds
+
+# Example: Wait until an element is present
+element = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='example-class']")))
+
+wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
 print(driver.title)
 
 # Close the browser after the task
