@@ -20,12 +20,14 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils \
     wget \
+    libasound2 \
+    libvulkan1 \
+    fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Chrome and ChromeDriver
+# Install Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN dpkg -i google-chrome-stable_current_amd64.deb
-RUN apt-get install -f
+RUN dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -f -y
 
 # Install Python dependencies
 RUN pip install selenium
