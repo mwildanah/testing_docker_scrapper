@@ -25,8 +25,4 @@ jobs:
           
       - name: Mounting
         run: |
-          docker run -v /app/data:/app/data selenium-scraper
-
-      - name: Run Docker container
-        run: |
-          docker run selenium-scraper
+          docker run -v $(pwd)/app/data:/app/data selenium-scraper
