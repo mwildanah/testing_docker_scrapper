@@ -28,3 +28,5 @@ for heading in headings:
 time.sleep(5)
 
 driver.quit()
+with open("/app/data/test_output.txt", "w") as f:
+    f.write("Test output file.")
