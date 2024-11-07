@@ -31,7 +31,7 @@ driver.quit()
 
 import os
 
-print("Saving file to:", os.path.abspath("/app/data/test_output.txt"))
+print("Saving file to:", os.path.abspath("/data/test_output.txt"))
 
-with open("/app/data/test_output.txt", "w") as f:
+with open("/data/test_output.txt", "w") as f:
     f.write("Test output file.")
