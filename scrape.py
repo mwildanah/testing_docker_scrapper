@@ -1,28 +1,30 @@
+import time
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Set up Chrome options for headless mode
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Run in headless mode
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.binary_location = "/usr/bin/chromium"
 
-# Initialize the driver in headless mode
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+service = Service(executable_path='/usr/bin/chromedriver')
+driver = webdriver.Chrome(service=service, options=chrome_options)
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Open the webpage
-driver.get("https://example.com")
 
-# Wait for an element to be visible
-wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
-element = wait.until(EC.visibility_of_element_located((By.ID, "some_element_id")))
+url = 'https://www.neuralnine.com/books'
 
-print("Element is visible and ready for interaction")
+driver.get(url)
+soup = BeautifulSoup(driver.page_source, features='lxml')
 
-# Close the driver
+headings = soup.find_all(name='h2', attrs={'class':'elementor-heading-title'})
+for heading in headings:
+    print(heading.getText())
+time.sleep(5)
+
 driver.quit()
