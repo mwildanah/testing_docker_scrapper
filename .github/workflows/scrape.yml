@@ -22,6 +22,10 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t selenium-scraper .
+          
+      - name: Mounting
+        run: |
+          docker run -v ./app/data:/app/data selenium-scraper
 
       - name: Run Docker container
         run: |
