@@ -1,32 +1,36 @@
-name: Web Scraping with Selenium in Docker
+name: Scrape Data Workflow
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  scrape:
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+    # Step 1: Checkout the code
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: |
-          docker build -t selenium-scraper .
+    # Step 2: Set up Docker
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      - name: Create Folder Mounting
-        run: |
-          mkdir ~/output_data
+    # Step 3: Build the Docker image
+    - name: Build Docker image
+      run: docker build -t scraper_image .
 
-      - name: Mounting
-        run: |
-          docker run -v ~/output_data:/data selenium-scraper
+    # Step 4: Create a folder for output and run the container
+    - name: Run Docker container and save data
+      run: |
+        mkdir -p output_data
+        docker run -v $(pwd)/output_data:/data scraper_image
+
+    # Step 5: Upload the output file as an artifact
+    - name: Upload scraped data
+      uses: actions/upload-artifact@v3
+      with:
+        name: scraped-data
+        path: output_data/scraped_data.csv
