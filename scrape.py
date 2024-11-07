@@ -28,5 +28,10 @@ for heading in headings:
 time.sleep(5)
 
 driver.quit()
+
+import os
+
+print("Saving file to:", os.path.abspath("/app/data/test_output.txt"))
+
 with open("/app/data/test_output.txt", "w") as f:
     f.write("Test output file.")
