@@ -22,7 +22,11 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t selenium-scraper .
-          
+
+      - name: Create Folder Mounting
+        run: |
+          mkdir ~/output_data
+
       - name: Mounting
         run: |
-          docker run -v $(pwd)/app/data:/app/data selenium-scraper
+          docker run -v ~/output_data:/data selenium-scraper
