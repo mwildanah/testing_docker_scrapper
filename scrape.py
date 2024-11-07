@@ -31,7 +31,17 @@ driver.quit()
 
 import os
 
-print("Saving file to:", os.path.abspath("/data/test_output.txt"))
+print("Saving file to:", os.path.abspath("/data/scraped_data.csv"))
 
-with open("/data/test_output.txt", "w") as f:
-    f.write("Test output file.")
+import pandas as pd
+
+data = {
+    'name':['Alice','Bob','Charlie'],
+    'age':[25,30,35]
+}
+
+df = pd.DataFrame(data)
+output_file = '/data/scraped_data.csv'
+df.to_csv(output_file, index=False)
+
+print(f'Data saved to {output_file}')
